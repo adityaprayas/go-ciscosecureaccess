@@ -75,10 +75,12 @@ func (c *SSEClientFactory) GetHttpClient(ctx context.Context) *http.Client {
 			ClientSecret: c.KeySecret,
 			TokenURL:     fmt.Sprintf("https://%s/auth/v2/token", c.ApiEndpoint)}
 
-		// Set the HTTP client for OAuth2 to use our retryable client
-		ctx = context.WithValue(ctx, oauth2.HTTPClient, tokenRetryClient.StandardClient())
+		// Use context.Background() so the cached HTTP client's token source is not
+		// tied to the short-lived context passed by the caller (e.g. Terraform's
+		// configure phase context, which is cancelled after Configure returns).
+		bgCtx := context.WithValue(context.Background(), oauth2.HTTPClient, tokenRetryClient.StandardClient())
 
-		oauthHttpClient := oauth2.NewClient(ctx, sSEAuthconfig.TokenSource(ctx))
+		oauthHttpClient := oauth2.NewClient(bgCtx, sSEAuthconfig.TokenSource(bgCtx))
 
 		// Create another retryable client for API requests
 		retryHttpClient := retryablehttp.NewClient()
