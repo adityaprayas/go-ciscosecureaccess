@@ -12,6 +12,7 @@ import (
 	"sync"
 
 	"github.com/CiscoDevNet/go-ciscosecureaccess/destinationlists"
+	"github.com/CiscoDevNet/go-ciscosecureaccess/identities"
 	"github.com/CiscoDevNet/go-ciscosecureaccess/internaldomains"
 	"github.com/CiscoDevNet/go-ciscosecureaccess/internalnetworks"
 	"github.com/CiscoDevNet/go-ciscosecureaccess/networks"
@@ -194,4 +195,11 @@ func (c *SSEClientFactory) GetVirtualAppliancesClient(ctx context.Context) *virt
 	configuration.HTTPClient = c.GetHttpClient(ctx)
 	configuration.Servers[0].URL = c.GetURLString("{basePath}")
 	return virtualappliances.NewAPIClient(configuration)
+}
+
+func (c *SSEClientFactory) GetIdentitiesClient(ctx context.Context) *identities.APIClient {
+	configuration := identities.NewConfiguration()
+	configuration.HTTPClient = c.GetHttpClient(ctx)
+	configuration.Servers[0].URL = c.GetURLString("{basePath}")
+	return identities.NewAPIClient(configuration)
 }

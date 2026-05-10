@@ -42,8 +42,11 @@ generate-sites:
 generate-virtualappliances:
 	make generate PACKAGE=virtualappliances SPEC=./specs/cisco_secure_access_virtual_appliances_api_2_0_0.yaml
 
+generate-identities:
+	make generate PACKAGE=identities SPEC=./specs/cisco_secure_access_identities_registration_api_1_0_0.yaml
+
 generate-all:
-	for spec in destinationlists internaldomains internalnetworks networks ntg privateapps reports resconn roaming rules swg virtualappliances; do \
+	for spec in destinationlists internaldomains internalnetworks networks ntg privateapps reports resconn roaming rules swg virtualappliances identities; do \
 	make generate-$${spec} ;\
 	done
 
