@@ -26,6 +26,8 @@ The `SECURITY.md` file describes security policies and procedures including repo
 
 [virtualappliances](./virtualappliances/README.md) - SSE Virtual Appliances API
 
+[identities](./identities/README.md) - SSE Identities Registration API
+
 ## Building
 
 Build an API client by invoking it's `make` target
