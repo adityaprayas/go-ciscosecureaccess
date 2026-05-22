@@ -23,6 +23,7 @@ import (
 	"github.com/CiscoDevNet/go-ciscosecureaccess/rules"
 	"github.com/CiscoDevNet/go-ciscosecureaccess/sites"
 	"github.com/CiscoDevNet/go-ciscosecureaccess/swg"
+	"github.com/CiscoDevNet/go-ciscosecureaccess/virtualappliances"
 	"github.com/hashicorp/go-retryablehttp"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/clientcredentials"
@@ -186,4 +187,11 @@ func (c *SSEClientFactory) GetSwgClient(ctx context.Context) *swg.APIClient {
 	configuration.HTTPClient = c.GetHttpClient(ctx)
 	configuration.Servers[0].URL = c.GetURLString("{basePath}")
 	return swg.NewAPIClient(configuration)
+}
+
+func (c *SSEClientFactory) GetVirtualAppliancesClient(ctx context.Context) *virtualappliances.APIClient {
+	configuration := virtualappliances.NewConfiguration()
+	configuration.HTTPClient = c.GetHttpClient(ctx)
+	configuration.Servers[0].URL = c.GetURLString("{basePath}")
+	return virtualappliances.NewAPIClient(configuration)
 }
