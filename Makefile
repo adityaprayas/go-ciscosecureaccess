@@ -3,6 +3,9 @@ generate:
 	openapi-generator generate -i $(SPEC) -g go --package-name $(PACKAGE) --git-host github.com --git-user-id CiscoDevNet --git-repo-id go-ciscosecureaccess -o $(PACKAGE) --additional-properties=isGoSubmodule=true --type-mappings integer=int64,int=int64,number=int64 --openapi-normalizer KEEP_ONLY_FIRST_TAG_IN_OPERATION=true --additional-properties=disallowAdditionalPropertiesIfNotPresent=false $(CLI_EXTRA)
 	rm -f $(PACKAGE)/go.mod $(PACKAGE)/go.sum
 
+generate-contentcategories:
+	make generate PACKAGE=contentcategories SPEC=./specs/cisco_secure_access_content_categories_api_1_0_0.yaml
+
 generate-destinationlists:
 	make generate PACKAGE=destinationlists SPEC=./specs/cisco_secure_access_destination_lists_api_1_0_0.yaml
 
@@ -46,7 +49,7 @@ generate-identities:
 	make generate PACKAGE=identities SPEC=./specs/cisco_secure_access_identities_registration_api_1_0_0.yaml
 
 generate-all:
-	for spec in destinationlists internaldomains internalnetworks networks ntg privateapps reports resconn roaming rules swg virtualappliances identities; do \
+	for spec in contentcategories destinationlists internaldomains internalnetworks networks ntg privateapps reports resconn roaming rules swg virtualappliances identities; do \
 	make generate-$${spec} ;\
 	done
 

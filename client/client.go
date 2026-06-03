@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"sync"
 
+	"github.com/CiscoDevNet/go-ciscosecureaccess/contentcategories"
 	"github.com/CiscoDevNet/go-ciscosecureaccess/destinationlists"
 	"github.com/CiscoDevNet/go-ciscosecureaccess/identities"
 	"github.com/CiscoDevNet/go-ciscosecureaccess/internaldomains"
@@ -60,7 +61,6 @@ func noRetryOnAuthFailure(ctx context.Context, resp *http.Response, err error) (
 }
 
 func (c *SSEClientFactory) GetHttpClient(ctx context.Context) *http.Client {
-
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	if c.ApiEndpoint == "" {
@@ -75,7 +75,8 @@ func (c *SSEClientFactory) GetHttpClient(ctx context.Context) *http.Client {
 		sSEAuthconfig := &clientcredentials.Config{
 			ClientID:     c.KeyId,
 			ClientSecret: c.KeySecret,
-			TokenURL:     fmt.Sprintf("https://%s/auth/v2/token", c.ApiEndpoint)}
+			TokenURL:     fmt.Sprintf("https://%s/auth/v2/token", c.ApiEndpoint),
+		}
 
 		// Use context.Background() so the cached HTTP client's token source is not
 		// tied to the short-lived context passed by the caller (e.g. Terraform's
@@ -94,6 +95,7 @@ func (c *SSEClientFactory) GetHttpClient(ctx context.Context) *http.Client {
 	}
 	return c.SSEHttpClient
 }
+
 func (c *SSEClientFactory) GetURLString(suffix string) string {
 	var hostname string
 	if c.ApiEndpoint == "" {
@@ -103,7 +105,13 @@ func (c *SSEClientFactory) GetURLString(suffix string) string {
 	}
 
 	return fmt.Sprintf("https://%s/%s", hostname, suffix)
+}
 
+func (c *SSEClientFactory) GetContentCategoriesClient(ctx context.Context) *contentcategories.APIClient {
+	configuration := contentcategories.NewConfiguration()
+	configuration.HTTPClient = c.GetHttpClient(ctx)
+	configuration.Servers[0].URL = c.GetURLString("{basePath}")
+	return contentcategories.NewAPIClient(configuration)
 }
 
 func (c *SSEClientFactory) GetDestinationListsClient(ctx context.Context) *destinationlists.APIClient {
