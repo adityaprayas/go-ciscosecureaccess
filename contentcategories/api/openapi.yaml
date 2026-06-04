@@ -1,0 +1,553 @@
+openapi: 3.0.1
+info:
+  contact:
+    name: Cloud Security Developer Community
+  description: Get the Content Category settings in the Secure Access organization.
+  title: Cisco Secure Access Content Categories API
+  version: 1.0.0
+servers:
+- url: "https://api.sse.cisco.com/{basePath}"
+  variables:
+    basePath:
+      default: policies/v2
+security:
+- oauthFlow: []
+tags:
+- description: The Content Category settings.
+  name: Content Categories
+- name: Secure Access
+paths:
+  /categorySettings:
+    get:
+      description: Get all Content Category settings in the organization.
+      operationId: getCategorySettings
+      parameters:
+      - description: The number of a page in the collection.
+        explode: true
+        in: query
+        name: page
+        required: false
+        schema:
+          default: 1
+          format: int32
+          minimum: 1
+          type: integer
+        style: form
+      - description: The number of items on a page. The maximum items that are allowed
+          on a page in the response are 100.
+        example: 20
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 10
+          format: int32
+          maximum: 100
+          minimum: 1
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListContentCategorySettingsResponse"
+          description: OK
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/badRequest"
+          description: Bad Request
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/unauthorized"
+          description: Unauthorized
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/forbidden"
+          description: Forbidden
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/notFound"
+          description: Not Found
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/serverError"
+          description: Internal Server Error
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+      security:
+      - oauthFlow:
+        - policies.contentCategories:read
+      summary: List Content Categories
+      tags:
+      - Content Categories
+components:
+  headers:
+    Content-Type:
+      description: The MIME content type of the response body.
+      example: application/json
+      explode: false
+      schema:
+        type: string
+      style: simple
+    Date:
+      description: The timestamp of the response.
+      example: 2023-03-14T18:34:25Z
+      explode: false
+      schema:
+        pattern: "^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$"
+        type: string
+      style: simple
+  parameters:
+    page:
+      description: The number of a page in the collection.
+      explode: true
+      in: query
+      name: page
+      required: false
+      schema:
+        default: 1
+        format: int32
+        minimum: 1
+        type: integer
+      style: form
+    limit:
+      description: The number of items on a page. The maximum items that are allowed
+        on a page in the response are 100.
+      example: 20
+      explode: true
+      in: query
+      name: limit
+      required: false
+      schema:
+        default: 10
+        format: int32
+        maximum: 100
+        minimum: 1
+        type: integer
+      style: form
+  responses:
+    badRequest:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/badRequest"
+      description: Bad Request
+      headers:
+        Content-Type:
+          $ref: "#/components/headers/Content-Type"
+        Date:
+          $ref: "#/components/headers/Date"
+    unauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/unauthorized"
+      description: Unauthorized
+      headers:
+        Content-Type:
+          $ref: "#/components/headers/Content-Type"
+        Date:
+          $ref: "#/components/headers/Date"
+    forbidden:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/forbidden"
+      description: Forbidden
+      headers:
+        Content-Type:
+          $ref: "#/components/headers/Content-Type"
+        Date:
+          $ref: "#/components/headers/Date"
+    notFound:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/notFound"
+      description: Not Found
+      headers:
+        Content-Type:
+          $ref: "#/components/headers/Content-Type"
+        Date:
+          $ref: "#/components/headers/Date"
+    serverError:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/serverError"
+      description: Internal Server Error
+      headers:
+        Content-Type:
+          $ref: "#/components/headers/Content-Type"
+        Date:
+          $ref: "#/components/headers/Date"
+  schemas:
+    contentCategoryCreatedAt:
+      description: The date and time (in seconds since the Unix Epoch) when the system
+        created the Content Category setting.
+      example: 1490206249
+      type: integer
+    contentCategoryModifiedAt:
+      description: The date and time (in seconds since the Unix Epoch) when the system
+        modified the Content Category setting.
+      example: 1520476127
+      type: integer
+    contentCategoryId:
+      description: The ID of the Content Category setting.
+      example: 1234567
+      type: integer
+    contentCategoryName:
+      description: The name of the Content Category setting.
+      example: content category setting one
+      type: string
+    ListContentCategorySettingsResponse:
+      description: The list of the Content Category settings in the organization.
+      items:
+        $ref: "#/components/schemas/contentCategorySetting"
+      type: array
+    organizationId:
+      description: The ID of the organization.
+      example: 2345678
+      type: integer
+    isDefault:
+      description: Specifies whether the setting is the default setting.
+      example: true
+      type: boolean
+    isSwgDefault:
+      description: Specifies whether the Security profile for the secure web gateway
+        (SWG) is the default Security profile.
+      example: true
+      type: boolean
+    markedForDeletion:
+      description: Specifies whether the system marks the setting for deletion.
+      example: false
+      type: boolean
+    bundleTypeId:
+      description: The ID of the bundle type.
+      enum:
+      - 1
+      - 2
+      - 3
+      - 4
+      example: 2
+      type: integer
+    categoryBits:
+      description: The number of bits in the Content Category.
+      example: fffffffffffff000fffffffff8800000000000090106049004c46
+      type: string
+    warnCategoryBits:
+      description: The number of bits in Content Category for a Warn action.
+      example: fffffffffffff000fffffffff8800000000000090106049004c46
+      type: string
+    contentCategorySetting:
+      description: The properties of the Content Category settings.
+      example:
+        id: 14758855
+        organizationId: 1
+        isDefault: true
+        name: content category setting one
+        categoryBits: fffffffffffff000fffffffff8800000000000090106049004c46
+        type: mixed
+        createdAt: 1520476127
+        modifiedAt: 1520476129
+        markedForDeletion: false
+        bundleTypeId: 1
+        isSwgDefault: false
+        warnCategoryBits: "0"
+      properties:
+        id:
+          description: The ID of the Content Category setting.
+          example: 1234567
+          type: integer
+        organizationId:
+          description: The ID of the organization.
+          example: 2345678
+          type: integer
+        isDefault:
+          description: Specifies whether the setting is the default setting.
+          example: true
+          type: boolean
+        name:
+          description: The name of the Content Category setting.
+          example: content category setting one
+          type: string
+        categoryBits:
+          description: The number of bits in the Content Category.
+          example: fffffffffffff000fffffffff8800000000000090106049004c46
+          type: string
+        type:
+          description: The type of the Content Category setting.
+          enum:
+          - mixed
+          example: mixed
+          type: string
+        createdAt:
+          description: The date and time (in seconds since the Unix Epoch) when the
+            system created the Content Category setting.
+          example: 1490206249
+          type: integer
+        modifiedAt:
+          description: The date and time (in seconds since the Unix Epoch) when the
+            system modified the Content Category setting.
+          example: 1520476127
+          type: integer
+        markedForDeletion:
+          description: Specifies whether the system marks the setting for deletion.
+          example: false
+          type: boolean
+        bundleTypeId:
+          $ref: "#/components/schemas/bundleTypeId"
+        isSwgDefault:
+          description: Specifies whether the Security profile for the secure web gateway
+            (SWG) is the default Security profile.
+          example: true
+          type: boolean
+        warnCategoryBits:
+          description: The number of bits in Content Category for a Warn action.
+          example: fffffffffffff000fffffffff8800000000000090106049004c46
+          type: string
+      type: object
+    badRequest:
+      description: Bad Request
+      example:
+        data:
+          message: Bad Request
+        status:
+          code: 400
+          text: Bad Request
+      properties:
+        status:
+          $ref: "#/components/schemas/badRequest_status"
+        data:
+          $ref: "#/components/schemas/badRequest_data"
+      type: object
+    unauthorized:
+      description: Unauthorized
+      example:
+        data:
+          message: Unauthorized
+        status:
+          code: 401
+          text: Unauthorized
+      properties:
+        status:
+          $ref: "#/components/schemas/unauthorized_status"
+        data:
+          $ref: "#/components/schemas/unauthorized_data"
+      type: object
+    forbidden:
+      description: Forbidden
+      example:
+        data:
+          message: Forbidden
+        status:
+          code: 403
+          text: Forbidden
+      properties:
+        status:
+          $ref: "#/components/schemas/forbidden_status"
+        data:
+          $ref: "#/components/schemas/forbidden_data"
+      type: object
+    notFound:
+      description: Not Found
+      example:
+        data:
+          message: Not Found
+        status:
+          code: 404
+          text: Not Found
+      properties:
+        status:
+          $ref: "#/components/schemas/notFound_status"
+        data:
+          $ref: "#/components/schemas/notFound_data"
+      type: object
+    serverError:
+      description: Internal Server Error
+      example:
+        data:
+          message: Internal Server Error
+        status:
+          code: 500
+          text: Internal Server Error
+      properties:
+        status:
+          $ref: "#/components/schemas/serverError_status"
+        data:
+          $ref: "#/components/schemas/serverError_data"
+      type: object
+    badRequest_status:
+      description: Validation Error
+      example:
+        code: 400
+        text: Bad Request
+      properties:
+        code:
+          description: HTTP status error code
+          example: 400
+          type: integer
+        text:
+          description: HTTP status error text
+          example: Bad Request
+          type: string
+      type: object
+    badRequest_data:
+      description: Validation Error
+      example:
+        message: Bad Request
+      properties:
+        message:
+          description: Error message
+          example: Bad Request
+          type: string
+      type: object
+    unauthorized_status:
+      description: Unauthorized
+      example:
+        code: 401
+        text: Unauthorized
+      properties:
+        code:
+          description: HTTP status error code
+          example: 401
+          type: integer
+        text:
+          description: HTTP status error text
+          example: Unauthorized
+          type: string
+      type: object
+    unauthorized_data:
+      description: Unauthorized
+      example:
+        message: Unauthorized
+      properties:
+        message:
+          description: Error message
+          example: Unauthorized
+          type: string
+      type: object
+    forbidden_status:
+      description: Forbidden
+      example:
+        code: 403
+        text: Forbidden
+      properties:
+        code:
+          description: HTTP status error code
+          example: 403
+          type: integer
+        text:
+          description: HTTP status error text
+          example: Forbidden
+          type: string
+      type: object
+    forbidden_data:
+      description: Forbidden
+      example:
+        message: Forbidden
+      properties:
+        message:
+          description: Error message
+          example: Forbidden
+          type: string
+      type: object
+    notFound_status:
+      description: Resource Not Found
+      example:
+        code: 404
+        text: Not Found
+      properties:
+        code:
+          description: HTTP status error code
+          example: 404
+          type: integer
+        text:
+          description: HTTP status error text
+          example: Not Found
+          type: string
+      type: object
+    notFound_data:
+      description: Resource Not Found
+      example:
+        message: Not Found
+      properties:
+        message:
+          description: Error message
+          example: Not Found
+          type: string
+      type: object
+    serverError_status:
+      description: Internal Server Error
+      example:
+        code: 500
+        text: Internal Server Error
+      properties:
+        code:
+          description: HTTP status error code
+          example: 500
+          type: integer
+        text:
+          description: HTTP status error text
+          example: Internal Server Error
+          type: string
+      type: object
+    serverError_data:
+      description: Internal Server Error
+      example:
+        message: Internal Server Error
+      properties:
+        message:
+          description: Error message
+          example: Internal Server Error
+          type: string
+      type: object
+  securitySchemes:
+    oauthFlow:
+      description: The client credential flow.
+      flows:
+        clientCredentials:
+          scopes:
+            policies.contentCategories:read: Read Content Category settings
+          tokenUrl: https://api.sse.cisco.com/auth/v2/token
+      type: oauth2
