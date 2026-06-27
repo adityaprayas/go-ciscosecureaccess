@@ -1,0 +1,2969 @@
+openapi: 3.0.0
+info:
+  contact:
+    name: Cloud Security Developer Community
+  description: Manage the alert rules in the organization and monitor the alerts generated
+    by the alert rules.
+  title: Cisco Secure Access Alerting API
+  version: 1.0.0
+servers:
+- url: "https://api.sse.cisco.com/{basePath}"
+  variables:
+    basePath:
+      default: admin/v2
+security:
+- oauthFlow: []
+tags:
+- name: Alert Rules
+- name: Alerts
+- name: Secure Access
+paths:
+  /alerting/rules:
+    delete:
+      description: Delete multiple alert rules. Provide a list of unique identifiers
+        for the alert rules.
+      operationId: deleteAlertRules
+      requestBody:
+        $ref: "#/components/requestBodies/DeleteAlertRuleRequestBody"
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                success: true
+                successfulIds:
+                - 48
+                - 49
+                - 50
+                errorIds:
+                - 100
+              schema:
+                $ref: "#/components/schemas/deleteAlertRules_200_response"
+          description: OK
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_400_response"
+          description: Bad Request
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_401_response"
+          description: Unauthorized
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_403_response"
+          description: Forbidden
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_404_response"
+          description: Not Found
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "422":
+          content:
+            application/json:
+              example:
+                error: "Bad Request, Maximum 50 email recipients allowed per rule,\
+                  \ found 100"
+              schema:
+                $ref: "#/components/schemas/createAlertRule_422_response"
+          description: Unprocessable Entity (Too many email recipients or webhooks
+            in notification_info)
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/createAlertRule_429_response"
+          description: Too Many Requests
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_500_response"
+          description: Internal Server Error
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+      security:
+      - oauthFlow:
+        - admin.alertrules:write
+      summary: Delete Alert Rules
+      tags:
+      - Alert Rules
+    get:
+      description: Get the alert rules for the organization.
+      operationId: listAlertRules
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+              - id: 48
+                name: SFO-11 Group disconnected
+                description: Alert when SFO-11 Group connectivity is lost
+                severity: 2
+                status: 1
+                rule_type_id: 1
+                organization_id: 3056800
+                created_at: 2025-03-20T13:38:56Z
+                modified_at: 2025-07-03T18:27:12Z
+                notification_info:
+                - type: email
+                  recipients:
+                  - admin@example.com
+                conditions:
+                  match_type: all
+                  rows:
+                  - field: region
+                    value: US West-1
+              schema:
+                description: The list of the alert rules in the organization.
+                items:
+                  $ref: "#/components/schemas/AlertRule"
+                type: array
+          description: OK
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_400_response"
+          description: Bad Request
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_401_response"
+          description: Unauthorized
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_403_response"
+          description: Forbidden
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_404_response"
+          description: Not Found
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_500_response"
+          description: Internal Server Error
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+      security:
+      - oauthFlow:
+        - admin.alertrules:read
+      summary: List Alert Rules
+      tags:
+      - Alert Rules
+    post:
+      description: Create an alert rule in the organization.
+      operationId: createAlertRule
+      requestBody:
+        $ref: "#/components/requestBodies/CreateAlertRuleRequestBody"
+      responses:
+        "201":
+          content:
+            application/json:
+              example:
+                message: Rule created successfully
+              schema:
+                $ref: "#/components/schemas/createAlertRule_201_response"
+          description: Created
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/createAlertRule_409_response"
+          description: Conflict
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "422":
+          content:
+            application/json:
+              example:
+                error: "Bad Request, Maximum 50 email recipients allowed per rule,\
+                  \ found 100"
+              schema:
+                $ref: "#/components/schemas/createAlertRule_422_response"
+          description: Unprocessable Entity (Too many email recipients or webhooks
+            in notification_info)
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/createAlertRule_429_response"
+          description: Too Many Requests
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_400_response"
+          description: Bad Request
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_401_response"
+          description: Unauthorized
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_403_response"
+          description: Forbidden
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_404_response"
+          description: Not Found
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_500_response"
+          description: Internal Server Error
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+      security:
+      - oauthFlow:
+        - admin.alertrules:write
+      summary: Create Alert Rule
+      tags:
+      - Alert Rules
+  /alerting/rules/{ruleId}:
+    get:
+      description: Get the details for an alert rule in the organization.
+      operationId: getAlertRuleById
+      parameters:
+      - description: The unique identifier of the alert rule.
+        example: 42
+        explode: false
+        in: path
+        name: ruleId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                id: 48
+                name: SFO-11 Group disconnected
+                description: Monitors SFO-11 Group connectivity
+                severity: 2
+                status: 1
+                rule_type_id: 1
+                organization_id: 3056800
+                created_at: 2025-03-20T13:38:56Z
+                modified_at: 2025-07-03T18:27:12Z
+                notification_info:
+                - type: email
+                  recipients:
+                  - admin@example.com
+                conditions:
+                  match_type: all
+                  rows:
+                  - field: region
+                    value: US West-1
+              schema:
+                $ref: "#/components/schemas/AlertRule"
+          description: OK
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_400_response"
+          description: Bad Request
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_401_response"
+          description: Unauthorized
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_403_response"
+          description: Forbidden
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_404_response"
+          description: Not Found
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_500_response"
+          description: Internal Server Error
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/createAlertRule_429_response"
+          description: Too Many Requests
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+      security:
+      - oauthFlow:
+        - admin.alertrules:read
+      summary: Get Alert Rule
+      tags:
+      - Alert Rules
+    put:
+      description: Update the properties of an alert rule.
+      operationId: updateAlertRule
+      parameters:
+      - description: The unique identifier of the alert rule.
+        example: 42
+        explode: false
+        in: path
+        name: ruleId
+        required: true
+        schema:
+          type: integer
+        style: simple
+      requestBody:
+        $ref: "#/components/requestBodies/UpdateAlertRuleRequestBody"
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                message: Rule updated successfully
+              schema:
+                $ref: "#/components/schemas/updateAlertRule_200_response"
+          description: OK
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_400_response"
+          description: Bad Request
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_401_response"
+          description: Unauthorized
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_403_response"
+          description: Forbidden
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_404_response"
+          description: Not Found
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/createAlertRule_409_response"
+          description: Conflict
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "422":
+          content:
+            application/json:
+              example:
+                error: "Bad Request, Maximum 50 email recipients allowed per rule,\
+                  \ found 100"
+              schema:
+                $ref: "#/components/schemas/createAlertRule_422_response"
+          description: Unprocessable Entity (Too many email recipients or webhooks
+            in notification_info)
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/createAlertRule_429_response"
+          description: Too Many Requests
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_500_response"
+          description: Internal Server Error
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+      security:
+      - oauthFlow:
+        - admin.alertrules:write
+      summary: Update Alert Rule
+      tags:
+      - Alert Rules
+  /alerting/rules/status:
+    put:
+      description: Update the status of the alert rules.
+      operationId: updateAlertRulesStatus
+      requestBody:
+        $ref: "#/components/requestBodies/UpdateStatusAlertRuleRequestBody"
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                success: true
+                successfulIds:
+                - 1
+                - 2
+                - 3
+                - 4
+                errorIds:
+                - 1
+                - 2
+              schema:
+                $ref: "#/components/schemas/updateAlertRulesStatus_200_response"
+          description: OK
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_400_response"
+          description: Bad Request
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_401_response"
+          description: Unauthorized
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_403_response"
+          description: Forbidden
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_404_response"
+          description: Not Found
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "422":
+          content:
+            application/json:
+              example:
+                error: "Bad Request, Maximum 50 email recipients allowed per rule,\
+                  \ found 100"
+              schema:
+                $ref: "#/components/schemas/createAlertRule_422_response"
+          description: Unprocessable Entity (Too many email recipients or webhooks
+            in notification_info)
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/createAlertRule_429_response"
+          description: Too Many Requests
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_500_response"
+          description: Internal Server Error
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+      security:
+      - oauthFlow:
+        - admin.alertrules:write
+      summary: Update Status of Alert Rules
+      tags:
+      - Alert Rules
+  /alerting/alerts:
+    get:
+      description: Get the properties of the alerts for the organization.
+      operationId: listAlerts
+      parameters:
+      - description: |-
+          Filter the alerts by one or more properties.
+          Specify the properties of the filters query parameter in the JSON format.
+
+          Example:
+
+          ```
+          {
+              "alert_name": "alert number 50",
+              "created_after": '2025-01-01T00:00:00Z'
+          }
+          ```
+        explode: true
+        in: query
+        name: filters
+        required: false
+        schema:
+          $ref: "#/components/schemas/filtersAlertObject"
+        style: form
+      - description: The maximum number of items to return from the collection in
+          the response.
+        example: 5
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 10
+          type: integer
+        style: form
+      - description: The place to start reading in the collection. The default offset
+          is 0.
+        example: 0
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          format: int64
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                fullResponse:
+                  $ref: "#/components/examples/fullResponse"
+                fullResponseWithContext:
+                  $ref: "#/components/examples/fullResponseWithContext"
+                countOnly:
+                  $ref: "#/components/examples/countOnly"
+              schema:
+                $ref: "#/components/schemas/listAlerts_200_response"
+          description: OK
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_400_response"
+          description: Bad Request
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_401_response"
+          description: Unauthorized
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_403_response"
+          description: Forbidden
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_404_response"
+          description: Not Found
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_500_response"
+          description: Internal Server Error
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/createAlertRule_429_response"
+          description: Too Many Requests
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+      security:
+      - oauthFlow:
+        - admin.alertrules:read
+      summary: List Alerts
+      tags:
+      - Alerts
+  /alerting/alerts/{alertId}:
+    get:
+      description: Get the details for the specific alert sent by the system to the
+        organization.
+      operationId: getAlertById
+      parameters:
+      - description: The unique identifier of the alert.
+        example: AL-2048-833125-1764567890123-3f9a1c4b2d7e8f01
+        explode: false
+        in: path
+        name: alertId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                alertResponse:
+                  $ref: "#/components/examples/alertOnlyResponse"
+              schema:
+                $ref: "#/components/schemas/Alert"
+          description: OK
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_400_response"
+          description: Bad Request
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_401_response"
+          description: Unauthorized
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_403_response"
+          description: Forbidden
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_404_response"
+          description: Not Found
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_500_response"
+          description: Internal Server Error
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/createAlertRule_429_response"
+          description: Too Many Requests
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+      security:
+      - oauthFlow:
+        - admin.alerts:read
+      summary: Get Alert
+      tags:
+      - Alerts
+  /alerting/alerts/status:
+    put:
+      description: Update the status of the alerts in the organization.
+      operationId: updateAlertsStatus
+      requestBody:
+        $ref: "#/components/requestBodies/UpdateStatusAlertRequestBody"
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                success: true
+                successfulIds:
+                - AL-2048-833125-1764567890123-3f9a1c4b2d7e8f01
+                errorIds:
+                - AL-2048-833125-1764567890123-3f9a1c4b2d7e8f21
+              schema:
+                $ref: "#/components/schemas/updateAlertsStatus_200_response"
+          description: OK
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_400_response"
+          description: Bad Request
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_401_response"
+          description: Unauthorized
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_403_response"
+          description: Forbidden
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_404_response"
+          description: Not Found
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "422":
+          content:
+            application/json:
+              example:
+                error: "Bad Request, Maximum 50 email recipients allowed per rule,\
+                  \ found 100"
+              schema:
+                $ref: "#/components/schemas/createAlertRule_422_response"
+          description: Unprocessable Entity (Too many email recipients or webhooks
+            in notification_info)
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/createAlertRule_429_response"
+          description: Too Many Requests
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_500_response"
+          description: Internal Server Error
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+      security:
+      - oauthFlow:
+        - admin.alerts:write
+      summary: Update Status of Alerts
+      tags:
+      - Alerts
+  /alerting/alerts/testNotifications/emails:
+    post:
+      description: Create a test notification and send the alert to the recipients
+        configured in the alert rule.
+      operationId: sendAlertNotifications
+      requestBody:
+        $ref: "#/components/requestBodies/TestNotificationsEmailRequestBody"
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                status: success
+                message: All notifications sent successfully
+                results:
+                - type: email
+                  success: true
+                  recipients_count: 2
+              schema:
+                $ref: "#/components/schemas/TestEmailNotificationResponse"
+          description: OK
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_400_response"
+          description: Bad Request
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_401_response"
+          description: Unauthorized
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_403_response"
+          description: Forbidden
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_404_response"
+          description: Not Found
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/createAlertRule_429_response"
+          description: Too Many Requests
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/listAlertRules_500_response"
+          description: Internal Server Error
+          headers:
+            Content-Type:
+              $ref: "#/components/headers/Content-Type"
+            Date:
+              $ref: "#/components/headers/Date"
+      security:
+      - oauthFlow:
+        - admin.alerts:write
+      summary: Create Test Alert by Email
+      tags:
+      - Alerts
+components:
+  examples:
+    alertOnlyResponse:
+      summary: Full alerts response with list and counts.
+      value:
+        alertId: AL-2048-833125-1764567890123-3f9a1c4b2d7e8f01
+        organization_id: 8327040
+        description: Access rule was modified
+        status: 1
+        rule_id: 48
+        created_at: 2024-01-01T00:00:00Z
+        modified_at: 2024-01-01T00:00:00Z
+        name: Policy Change Alert
+        rule_type_id: 10
+        severity: 1
+        access_rule_context:
+          redirect_entity_url: https://dashboard.sse.cisco.com/org/8327040/secure/policy?ruleId=2313262
+          redirect_entity_url_label: Test Rule
+          change_type: create
+          changes_made: Rule created
+    fullResponse:
+      summary: Full alerts response with list and counts.
+      value:
+        total: 100
+        severityCounts:
+          High: 30
+          Medium: 50
+          Low: 20
+        alerts:
+        - alertId: AL-2048-833125-1764567890123-3f9a1c4b2d7e8f01
+          organization_id: 8327040
+          description: Access rule was modified
+          status: 1
+          rule_id: 48
+          created_at: 2024-01-01T00:00:00Z
+          modified_at: 2024-01-01T00:00:00Z
+          name: Policy Change Alert
+          rule_type_id: 10
+          severity: 1
+          access_rule_context:
+            redirect_entity_url: https://dashboard.sse.cisco.com/org/8327040/secure/policy?ruleId=2313262
+            redirect_entity_url_label: Test Rule
+            change_type: create
+            changes_made: Rule created
+    fullResponseWithContext:
+      summary: Full alerts response with include_context=true.
+      value:
+        total: 100
+        severityCounts:
+          High: 30
+          Medium: 50
+          Low: 20
+        alerts:
+        - alertId: AL-2048-833125-1764567890123-3f9a1c4b2d7e8f01
+          organization_id: 8327040
+          description: Access rule was modified
+          status: 1
+          rule_id: 48
+          created_at: 2024-01-01T00:00:00Z
+          modified_at: 2024-01-01T00:00:00Z
+          name: Policy Change Alert
+          rule_type_id: 10
+          severity: 1
+          access_rule_context:
+            redirect_entity_url: https://dashboard.sse.cisco.com/org/8327040/secure/policy?ruleId=2313262
+            redirect_entity_url_label: Test Rule
+            change_type: create
+            changes_made: Rule created
+          context:
+            redirect_entity_url: https://dashboard.sse.cisco.com/org/8327040/secure/policy?ruleId=2313262
+            redirect_entity_url_label: Test Rule
+            action: create
+        - alertId: AL-2048-833125-1764567890124-4g0b2d5c3e8f9g02
+          organization_id: 8327040
+          description: Anomalous user behavior detected
+          status: 1
+          rule_id: 49
+          created_at: 2024-01-02T10:30:00Z
+          modified_at: 2024-01-02T10:30:00Z
+          name: UEBA Alert
+          rule_type_id: 12
+          severity: 2
+          behavior_analytics_context:
+            redirect_entity_url: https://dashboard.sse.cisco.com/org/8327040/secure/ueba/user/12345
+            redirect_entity_url_label: View User
+          context:
+            redirect_entity_url: https://dashboard.sse.cisco.com/org/8327040/secure/ueba/user/12345
+            redirect_entity_url_label: View User
+            action: update
+    countOnly:
+      summary: Count-only response
+      value:
+        total: 100
+  headers:
+    Content-Type:
+      description: The MIME content type of the response body.
+      example: application/json
+      explode: false
+      schema:
+        type: string
+      style: simple
+    Date:
+      description: The date and time (ISO 8601-formatted timestamp) when the system
+        returned the response.
+      example: 2023-03-14T18:34:25Z
+      explode: false
+      schema:
+        pattern: "^[0-90-90-90-9-0-90-9-0-90-9T0-90-9:0-90-9:0-90-9Z]+$"
+        type: string
+      style: simple
+  parameters:
+    ruleId:
+      description: The unique identifier of the alert rule.
+      example: 42
+      explode: false
+      in: path
+      name: ruleId
+      required: true
+      schema:
+        type: integer
+      style: simple
+    alertId:
+      description: The unique identifier of the alert.
+      example: AL-2048-833125-1764567890123-3f9a1c4b2d7e8f01
+      explode: false
+      in: path
+      name: alertId
+      required: true
+      schema:
+        type: string
+      style: simple
+    limit:
+      description: The maximum number of items to return from the collection in the
+        response.
+      example: 5
+      explode: true
+      in: query
+      name: limit
+      required: false
+      schema:
+        default: 10
+        type: integer
+      style: form
+    offset:
+      description: The place to start reading in the collection. The default offset
+        is 0.
+      example: 0
+      explode: true
+      in: query
+      name: offset
+      required: false
+      schema:
+        default: 0
+        format: int64
+        type: integer
+      style: form
+    filtersAlerts:
+      description: |-
+        Filter the alerts by one or more properties.
+        Specify the properties of the filters query parameter in the JSON format.
+
+        Example:
+
+        ```
+        {
+            "alert_name": "alert number 50",
+            "created_after": '2025-01-01T00:00:00Z'
+        }
+        ```
+      explode: true
+      in: query
+      name: filters
+      required: false
+      schema:
+        $ref: "#/components/schemas/filtersAlertObject"
+      style: form
+  requestBodies:
+    TestNotificationsEmailRequestBody:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/TestNotification"
+      required: true
+    CreateAlertRuleRequestBody:
+      content:
+        application/json:
+          example:
+            name: SFO-02 Hub down
+            description: Alert when SFO-02 Hub is down
+            severity: 1
+            status: 1
+            rule_type_id: 1
+            notification_info:
+            - type: email
+              recipients:
+              - admin@example.com
+            conditions:
+              match_type: all
+              rows:
+              - field: tunnelGroupName
+                value: test2
+              - field: region
+                value: US West-2
+          schema:
+            $ref: "#/components/schemas/createAlertRule_request"
+      required: true
+    UpdateAlertRuleRequestBody:
+      content:
+        application/json:
+          example:
+            name: SFO-02 Hub down
+            description: Alert when SFO-02 Hub is down
+            severity: 1
+            status: 1
+            rule_type_id: 1
+            notification_info:
+            - type: email
+              recipients:
+              - admin@example.com
+            conditions:
+              match_type: all
+              rows:
+              - field: tunnelGroupName
+                value: test2
+              - field: region
+                value: US West-2
+          schema:
+            $ref: "#/components/schemas/updateAlertRule_request"
+      required: true
+    DeleteAlertRuleRequestBody:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/deleteAlertRules_request"
+      required: true
+    UpdateStatusAlertRequestBody:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/updateAlertsStatus_request"
+      required: true
+    UpdateStatusAlertRuleRequestBody:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/updateAlertRulesStatus_request"
+      required: true
+  responses:
+    "400Error":
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/listAlertRules_400_response"
+      description: Bad Request
+      headers:
+        Content-Type:
+          $ref: "#/components/headers/Content-Type"
+        Date:
+          $ref: "#/components/headers/Date"
+    "401Error":
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/listAlertRules_401_response"
+      description: Unauthorized
+      headers:
+        Content-Type:
+          $ref: "#/components/headers/Content-Type"
+        Date:
+          $ref: "#/components/headers/Date"
+    "403Error":
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/listAlertRules_403_response"
+      description: Forbidden
+      headers:
+        Content-Type:
+          $ref: "#/components/headers/Content-Type"
+        Date:
+          $ref: "#/components/headers/Date"
+    "404Error":
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/listAlertRules_404_response"
+      description: Not Found
+      headers:
+        Content-Type:
+          $ref: "#/components/headers/Content-Type"
+        Date:
+          $ref: "#/components/headers/Date"
+    "409Error":
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/createAlertRule_409_response"
+      description: Conflict
+      headers:
+        Content-Type:
+          $ref: "#/components/headers/Content-Type"
+        Date:
+          $ref: "#/components/headers/Date"
+    "422Error":
+      content:
+        application/json:
+          example:
+            error: "Bad Request, Maximum 50 email recipients allowed per rule, found\
+              \ 100"
+          schema:
+            $ref: "#/components/schemas/createAlertRule_422_response"
+      description: Unprocessable Entity (Too many email recipients or webhooks in
+        notification_info)
+      headers:
+        Content-Type:
+          $ref: "#/components/headers/Content-Type"
+        Date:
+          $ref: "#/components/headers/Date"
+    "429Error":
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/createAlertRule_429_response"
+      description: Too Many Requests
+      headers:
+        Content-Type:
+          $ref: "#/components/headers/Content-Type"
+        Date:
+          $ref: "#/components/headers/Date"
+    "500Error":
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/listAlertRules_500_response"
+      description: Internal Server Error
+      headers:
+        Content-Type:
+          $ref: "#/components/headers/Content-Type"
+        Date:
+          $ref: "#/components/headers/Date"
+  schemas:
+    pattern_search:
+      description: "Provide a search pattern to query for by the alert name, alert\
+        \ rule name, or alert rule category name."
+      example: Network Tunnel
+      type: string
+    created_after:
+      description: |-
+        Filter for the alerts in the collection that the system created after the timestamp.
+        Provide a date and time (ISO 8601) using the YYYY-MM-DD HH:MM:SS format.
+        **Note:** You cannot use the `created_after` query parameter with the `time_range` filter.
+      example: 2024-01-01T00:00:00Z
+      format: date-time
+      type: string
+    only_active_alerts_count:
+      default: false
+      description: Specify whether to query for the count of the active alerts only.
+      example: true
+      type: boolean
+    entity_ids_alert_rules:
+      description: The list of identifiers used by the system to update the alert
+        rules.
+      example:
+      - 1
+      - 2
+      items:
+        description: The identifier of the alert rule. The system uses this identifier
+          to update the alert rule.
+        example: 1
+        type: integer
+      maxItems: 100
+      minItems: 1
+      type: array
+    entity_ids_alerts:
+      description: The list of identifiers used by the system to update the alerts.
+      example:
+      - 1adf
+      - 2eed
+      items:
+        description: The identifier of the alert. The system uses this identifier
+          to update the alert.
+        example: 1abc
+        type: string
+      maxItems: 100
+      minItems: 1
+      type: array
+    success:
+      description: |-
+        Specifies whether the system completed all operations successfully.
+        If any ID is invalid, the system is unable to complete the operation.
+      example: true
+      type: boolean
+    successfulIdsUpdateInteger:
+      description: The list of IDs for the alert rules that the system updated.
+      example:
+      - 1234
+      items:
+        description: The ID of the alert rule that the system updated.
+        example: 1234
+        type: integer
+      type: array
+    successfulIdsUpdateString:
+      description: The list of IDs for the alert rules that the system updated.
+      example:
+      - AL-2048-833125-1764567890123-3f9a1c4b2d7e8f01
+      items:
+        description: The ID of the alert rule that the system updated.
+        example: AL-2048-833125-1764567890123-3f9a1c4b2d7e8f01
+        type: string
+      type: array
+    successfulIdsDelete:
+      description: The list of IDs for the alert rules that the system deleted.
+      example:
+      - 1
+      - 2
+      - 3
+      - 4
+      items:
+        description: The ID of the alert rule that the system deleted.
+        type: integer
+      type: array
+    errorIdsString:
+      description: The list of unique identifiers that either do no exist or the system
+        failed to delete or update.
+      example:
+      - 100a
+      items:
+        description: The unique identifier of the alert rule that does not exist or
+          the system failed to delete or update.
+        example: 100a
+        type: string
+      type: array
+    errorIdsInteger:
+      description: The list of unique identifiers that either do no exist or the system
+        failed to delete or update.
+      example:
+      - 100
+      items:
+        description: The unique identifier of the alert rule that does not exist or
+          the system failed to delete or update.
+        example: 100
+        type: integer
+      type: array
+    createdAtAlertRule:
+      description: The time and date (ISO 8601 timestamp) when the system created
+        the alert rule.
+      example: 2025-01-01T00:00:00Z
+      format: date-time
+      type: string
+    modifiedAtAlertRule:
+      description: The time and date (ISO 8601 timestamp) when the system last modified
+        the alert rule.
+      example: 2025-01-01T00:00:00Z
+      format: date-time
+      type: string
+    createdAtAlert:
+      description: The time and date (ISO 8601 timestamp) when the system created
+        the alert.
+      example: 2025-01-01T00:00:00Z
+      format: date-time
+      type: string
+    modifiedAtAlert:
+      description: The time and date (ISO 8601 timestamp) when the system last modified
+        the alert.
+      example: 2025-01-01T00:00:00Z
+      format: date-time
+      type: string
+    include_context:
+      default: false
+      description: Include the context field in each alert response. The context contains
+        additional metadata about the alert.
+      example: true
+      type: boolean
+    time_range:
+      description: The start and end times that the system uses to filter the alerts
+        in the collection.
+      example:
+        start_time: 2024-01-01 00:00:00
+        end_time: 2024-12-31 23:59:59
+      properties:
+        start_time:
+          description: |-
+            The time and date (ISO 8601 timestamp) that begins the time range. The system uses
+            the time range to filter for alerts in the collection.
+            Use the 'YYYY-MM-DD HH:MM:SS' format.
+          format: date-time
+          type: string
+        end_time:
+          description: |-
+            The time and date (ISO 8601 timestamp) that ends the time range. The system uses
+            the time range to filter for alerts in the collection.
+            Use the 'YYYY-MM-DD HH:MM:SS' format.
+          format: date-time
+          type: string
+      type: object
+    event_time:
+      description: The date and time (ISO 8601 timestamp) when the system recorded
+        the event.
+      example: 2024-10-22T10:30:00Z
+      format: date-time
+      type: string
+    idAlert:
+      description: The unique identifier of the alert.
+      example: AL-2048-833125-1764567890123-3f9a1c4b2d7e8f01
+      type: string
+    idAlertRule:
+      description: The unique identifier of the alert rule.
+      example: 42
+      type: integer
+    idRule:
+      description: The unique identifier of the associated rule.
+      example: 42
+      type: integer
+    nameAlertRule:
+      description: The unique name of the alert rule.
+      example: Production VPN Tunnel Alert
+      maxLength: 255
+      type: string
+    nameAlert:
+      description: The name of the alert.
+      example: Production VPN Tunnel Alert
+      type: string
+    organizationId:
+      description: The unique identifier of the organization.
+      example: 12345
+      type: integer
+    descriptionAlertRule:
+      description: The description of the alert rule.
+      example: Alert when production VPN tunnel disconnects
+      maxLength: 100
+      type: string
+    descriptionAlert:
+      description: The description of the alert.
+      example: Alert when SFO-11 Group connectivity is lost
+      type: string
+    ruleTypeId:
+      description: |-
+        The identifier of the rule type.
+
+        **Category: Connectivity**
+
+        | Rule Type ID | Rule Type Name |
+        | --- | --- |
+        | 1 | Network tunnel group disconnected |
+        | 2 | No traffic through network tunnel group |
+
+        **Category: API Anomalies**
+
+        | Rule Type ID | Rule Type Name |
+        | --- | --- |
+        | 3 | Too many requests to get an access token |
+        | 4 | High percentage of API errors |
+        | 5 | Large number of rate limit errors |
+        | 6 | More than one client using an API credential |
+        | 7 | Authentication failures |
+        | 8 | Programmatic creation of more than one API credential |
+
+        **Category: Data Usage**
+
+        | Rule Type ID | Rule Type Name |
+        | --- | --- |
+        | 9 | Data usage approaching limit |
+
+        **Category: Access Rule Changes**
+
+        | Rule Type ID | Rule Type Name |
+        | --- | --- |
+        | 10 | Rule creation, deletion, changing or reordering |
+
+        **Category: Behavior Analytics**
+
+        | Rule Type ID | Rule Type Name |
+        | --- | --- |
+        | 11 | Impossible travel detected |
+        | 12 | Bulk upload operations |
+        | 13 | Bulk download operations |
+        | 14 | Bulk delete operations |
+        | 15 | DLP violation spike |
+        | 16 | Upload from high-risk countries |
+        | 17 | Upload to high-risk countries |
+      example: 1
+      type: integer
+    severityAlert:
+      description: |-
+        The severity of the alert. The supported severity levels are:
+        - 1 (High)
+        - 2 (Medium)
+        - 3 (Low)
+        - 4 (Info)
+      enum:
+      - 1
+      - 2
+      - 3
+      - 4
+      example: 1
+      type: integer
+    statusAlertRule:
+      description: |-
+        The status of the alert rule. The supported status types are:
+        - 1 (Enabled)
+        - 2 (Disabled)
+      enum:
+      - 1
+      - 2
+      example: 1
+      type: integer
+    statusAlert:
+      description: |-
+        The status of the alert. The supported status types are:
+        - 1 (Active)
+        - 2 (Dismissed)
+        - 3 (Resolved)
+        - 4 (Archived)
+      enum:
+      - 1
+      - 2
+      - 3
+      - 4
+      example: 1
+      type: integer
+    totalAlerts:
+      description: The total number of active alerts.
+      example: 100
+      type: integer
+    notificationTypeEmail:
+      description: The type of the notification.
+      enum:
+      - email
+      example: email
+      type: string
+    notificationTypeAll:
+      description: The type of the notification for the alert rule.
+      enum:
+      - email
+      - webhook
+      example: webhook
+      type: string
+    notificationInfoAlertRule:
+      description: The properties of the notification for the alert rule.
+      example:
+        webhook_ids:
+        - 1abcde
+        - 1abcde
+        recipients:
+        - admin@company.com
+        - ops@company.com
+        type: webhook
+      properties:
+        type:
+          $ref: "#/components/schemas/notificationTypeAll"
+        recipients:
+          description: The list of email recipients configured in the alert rule to
+            receive the notification.
+          example:
+          - admin@company.com
+          - ops@company.com
+          items:
+            description: An email recipient for the notification.
+            format: email
+            type: string
+          maxItems: 50
+          minItems: 1
+          type: array
+        webhook_ids:
+          description: The list of unique identifiers for the Webhooks configured
+            on the alert rule.
+          items:
+            description: The unique identifier for the Webhook ID.
+            example: 1abcde
+            type: string
+          type: array
+      type: object
+    conditionsAlertRule:
+      description: The conditions that trigger the type of notification.
+      example:
+        match_type: all
+        rows:
+        - field: field
+          value: value
+        - field: field
+          value: value
+      properties:
+        match_type:
+          description: "Choose from one of the accepted conditions: `all` (AND), `any`\
+            \ (OR), or ''."
+          enum:
+          - all
+          - any
+          - ""
+          example: all
+          type: string
+        rows:
+          description: The list of conditions that the system uses to evaluate the
+            alert rule.
+          items:
+            $ref: "#/components/schemas/conditionsAlertRule_rows_inner"
+          type: array
+      type: object
+    AlertRule:
+      description: The properties of the alert rule.
+      example:
+        severity: 1
+        organization_id: 12345
+        name: Production VPN Tunnel Alert
+        description: Alert when production VPN tunnel disconnects
+        created_at: 2025-01-01T00:00:00Z
+        id: 42
+        notification_info:
+        - webhook_ids:
+          - 1abcde
+          - 1abcde
+          recipients:
+          - admin@company.com
+          - ops@company.com
+          type: webhook
+        - webhook_ids:
+          - 1abcde
+          - 1abcde
+          recipients:
+          - admin@company.com
+          - ops@company.com
+          type: webhook
+        conditions:
+          match_type: all
+          rows:
+          - field: field
+            value: value
+          - field: field
+            value: value
+        modified_at: 2025-01-01T00:00:00Z
+        rule_type_id: 1
+        status: 1
+      properties:
+        id:
+          description: The unique identifier of the alert rule.
+          example: 42
+          type: integer
+        name:
+          description: The unique name of the alert rule.
+          example: Production VPN Tunnel Alert
+          maxLength: 255
+          type: string
+        description:
+          description: The description of the alert rule.
+          example: Alert when production VPN tunnel disconnects
+          maxLength: 100
+          type: string
+        severity:
+          $ref: "#/components/schemas/severityAlert"
+        status:
+          $ref: "#/components/schemas/statusAlertRule"
+        rule_type_id:
+          description: |-
+            The identifier of the rule type.
+
+            **Category: Connectivity**
+
+            | Rule Type ID | Rule Type Name |
+            | --- | --- |
+            | 1 | Network tunnel group disconnected |
+            | 2 | No traffic through network tunnel group |
+
+            **Category: API Anomalies**
+
+            | Rule Type ID | Rule Type Name |
+            | --- | --- |
+            | 3 | Too many requests to get an access token |
+            | 4 | High percentage of API errors |
+            | 5 | Large number of rate limit errors |
+            | 6 | More than one client using an API credential |
+            | 7 | Authentication failures |
+            | 8 | Programmatic creation of more than one API credential |
+
+            **Category: Data Usage**
+
+            | Rule Type ID | Rule Type Name |
+            | --- | --- |
+            | 9 | Data usage approaching limit |
+
+            **Category: Access Rule Changes**
+
+            | Rule Type ID | Rule Type Name |
+            | --- | --- |
+            | 10 | Rule creation, deletion, changing or reordering |
+
+            **Category: Behavior Analytics**
+
+            | Rule Type ID | Rule Type Name |
+            | --- | --- |
+            | 11 | Impossible travel detected |
+            | 12 | Bulk upload operations |
+            | 13 | Bulk download operations |
+            | 14 | Bulk delete operations |
+            | 15 | DLP violation spike |
+            | 16 | Upload from high-risk countries |
+            | 17 | Upload to high-risk countries |
+          example: 1
+          type: integer
+        notification_info:
+          description: List of notification configurations for this rule
+          items:
+            $ref: "#/components/schemas/notificationInfoAlertRule"
+          type: array
+        organization_id:
+          description: The unique identifier of the organization.
+          example: 12345
+          type: integer
+        conditions:
+          $ref: "#/components/schemas/conditionsAlertRule"
+        created_at:
+          description: The time and date (ISO 8601 timestamp) when the system created
+            the alert rule.
+          example: 2025-01-01T00:00:00Z
+          format: date-time
+          type: string
+        modified_at:
+          description: The time and date (ISO 8601 timestamp) when the system last
+            modified the alert rule.
+          example: 2025-01-01T00:00:00Z
+          format: date-time
+          type: string
+      type: object
+    redirect_entity_url_ueba:
+      description: The URL for the entity in Secure Access.
+      example: https://dashboard.sse.cisco.com/org/8327040/secure/ueba/user/12345
+      type: string
+    redirect_entity_url_access_rules:
+      description: The URL for the entity in Secure Access.
+      example: https://dashboard.sse.cisco.com/org/8327040/secure/policy?ruleId=2312623
+      type: string
+    redirect_entity_url_label:
+      description: The label for the entity's redirect URL.
+      example: View entity
+      type: string
+    context:
+      description: |-
+        The properties of the metadata for the context.
+        The system includes this field in the response when the API request sets the `include_context=true` query parameter.
+      example:
+        redirect_entity_url: https://dashboard.sse.cisco.com/org/8327040/secure/policy?ruleId=2313262
+        redirect_entity_url_label: Test Rule
+        action: create
+      type: object
+    access_rule_context:
+      description: The properties of the context for the changes to the access rules
+        alerts.
+      example:
+        redirect_entity_url_label: View entity
+        changes_made: Rule changed
+        change_type: update
+        redirect_entity_url: https://dashboard.sse.cisco.com/org/8327040/secure/policy?ruleId=2312623
+      properties:
+        redirect_entity_url:
+          description: The URL for the entity in Secure Access.
+          example: https://dashboard.sse.cisco.com/org/8327040/secure/policy?ruleId=2312623
+          type: string
+        redirect_entity_url_label:
+          description: The label for the entity's redirect URL.
+          example: View entity
+          type: string
+        change_type:
+          description: The type of change made on the access rule.
+          enum:
+          - create
+          - update
+          - delete
+          example: update
+          type: string
+        changes_made:
+          description: The description of the changes made by the system on the access
+            rule.
+          example: Rule changed
+          type: string
+      type: object
+    behavior_analytics_context:
+      description: The properties of the context for the Behavior Analytics (UEBA)
+        alerts.
+      example:
+        redirect_entity_url_label: View entity
+        redirect_event_url: https://dashboard.sse.cisco.com/org/8327040/secure/ueba/event/67890
+        redirect_entity_url: https://dashboard.sse.cisco.com/org/8327040/secure/ueba/user/12345
+      properties:
+        redirect_entity_url:
+          description: The URL for the entity in Secure Access.
+          example: https://dashboard.sse.cisco.com/org/8327040/secure/ueba/user/12345
+          type: string
+        redirect_entity_url_label:
+          description: The label for the entity's redirect URL.
+          example: View entity
+          type: string
+        redirect_event_url:
+          description: The URL for the UEBA event in Secure Access.
+          example: https://dashboard.sse.cisco.com/org/8327040/secure/ueba/event/67890
+          type: string
+      type: object
+    Alert:
+      description: The properties of the alert.
+      example:
+        rule_id: 42
+        severity: 1
+        organization_id: 12345
+        name: Production VPN Tunnel Alert
+        description: Alert when SFO-11 Group connectivity is lost
+        created_at: 2025-01-01T00:00:00Z
+        behavior_analytics_context:
+          redirect_entity_url_label: View entity
+          redirect_event_url: https://dashboard.sse.cisco.com/org/8327040/secure/ueba/event/67890
+          redirect_entity_url: https://dashboard.sse.cisco.com/org/8327040/secure/ueba/user/12345
+        alertId: AL-2048-833125-1764567890123-3f9a1c4b2d7e8f01
+        access_rule_context:
+          redirect_entity_url_label: View entity
+          changes_made: Rule changed
+          change_type: update
+          redirect_entity_url: https://dashboard.sse.cisco.com/org/8327040/secure/policy?ruleId=2312623
+        modified_at: 2025-01-01T00:00:00Z
+        rule_type_id: 1
+        status: 1
+      properties:
+        alertId:
+          description: The unique identifier of the alert.
+          example: AL-2048-833125-1764567890123-3f9a1c4b2d7e8f01
+          type: string
+        organization_id:
+          description: The unique identifier of the organization.
+          example: 12345
+          type: integer
+        description:
+          description: The description of the alert.
+          example: Alert when SFO-11 Group connectivity is lost
+          type: string
+        status:
+          $ref: "#/components/schemas/statusAlert"
+        rule_id:
+          description: The unique identifier of the associated rule.
+          example: 42
+          type: integer
+        created_at:
+          description: The time and date (ISO 8601 timestamp) when the system created
+            the alert.
+          example: 2025-01-01T00:00:00Z
+          format: date-time
+          type: string
+        modified_at:
+          description: The time and date (ISO 8601 timestamp) when the system last
+            modified the alert.
+          example: 2025-01-01T00:00:00Z
+          format: date-time
+          type: string
+        name:
+          description: The name of the alert.
+          example: Production VPN Tunnel Alert
+          type: string
+        rule_type_id:
+          description: |-
+            The identifier of the rule type.
+
+            **Category: Connectivity**
+
+            | Rule Type ID | Rule Type Name |
+            | --- | --- |
+            | 1 | Network tunnel group disconnected |
+            | 2 | No traffic through network tunnel group |
+
+            **Category: API Anomalies**
+
+            | Rule Type ID | Rule Type Name |
+            | --- | --- |
+            | 3 | Too many requests to get an access token |
+            | 4 | High percentage of API errors |
+            | 5 | Large number of rate limit errors |
+            | 6 | More than one client using an API credential |
+            | 7 | Authentication failures |
+            | 8 | Programmatic creation of more than one API credential |
+
+            **Category: Data Usage**
+
+            | Rule Type ID | Rule Type Name |
+            | --- | --- |
+            | 9 | Data usage approaching limit |
+
+            **Category: Access Rule Changes**
+
+            | Rule Type ID | Rule Type Name |
+            | --- | --- |
+            | 10 | Rule creation, deletion, changing or reordering |
+
+            **Category: Behavior Analytics**
+
+            | Rule Type ID | Rule Type Name |
+            | --- | --- |
+            | 11 | Impossible travel detected |
+            | 12 | Bulk upload operations |
+            | 13 | Bulk download operations |
+            | 14 | Bulk delete operations |
+            | 15 | DLP violation spike |
+            | 16 | Upload from high-risk countries |
+            | 17 | Upload to high-risk countries |
+          example: 1
+          type: integer
+        severity:
+          $ref: "#/components/schemas/severityAlert"
+        access_rule_context:
+          $ref: "#/components/schemas/access_rule_context"
+        behavior_analytics_context:
+          $ref: "#/components/schemas/behavior_analytics_context"
+      type: object
+    AlertWithAdditionalContext:
+      anyOf:
+      - $ref: "#/components/schemas/Alert"
+      - $ref: "#/components/schemas/context"
+    TestEmailNotificationResponse:
+      description: The properties of the test email notification.
+      example:
+        message: All notifications sent successfully
+        results:
+        - recipients_count: 2
+          success: true
+          type: email
+          error: Error in sending the test notification.
+        - recipients_count: 2
+          success: true
+          type: email
+          error: Error in sending the test notification.
+        status: success
+      properties:
+        status:
+          description: The status of the notification.
+          enum:
+          - success
+          - partial_success
+          - failed
+          example: success
+          type: string
+        message:
+          description: The message sent by the system.
+          example: All notifications sent successfully
+          type: string
+        results:
+          description: The list of detailed results for each type of notification.
+          items:
+            $ref: "#/components/schemas/TestEmailNotificationResponse_results_inner"
+          type: array
+      type: object
+    TestNotification:
+      description: The properties of the test notification.
+      example:
+        severity: 1
+        redirect_link: https://dashboard.company.com/alerts/42
+        name: Production VPN Tunnel Disconnected
+        notification_info:
+        - webhook_ids:
+          - 1abcde
+          - 1abcde
+          recipients:
+          - admin@company.com
+          - ops@company.com
+          type: webhook
+        - webhook_ids:
+          - 1abcde
+          - 1abcde
+          recipients:
+          - admin@company.com
+          - ops@company.com
+          type: webhook
+        type: 1
+        conditions:
+          match_type: all
+          rows:
+          - field: field
+            value: value
+          - field: field
+            value: value
+        event_time: 2024-10-22T10:30:00Z
+      properties:
+        name:
+          description: The name of the alert rule.
+          example: Production VPN Tunnel Disconnected
+          type: string
+        type:
+          description: |-
+            The identifier of the rule type.
+
+            **Category: Connectivity**
+
+            | Rule Type ID | Rule Type Name |
+            | --- | --- |
+            | 1 | Network tunnel group disconnected |
+            | 2 | No traffic through network tunnel group |
+
+            **Category: API Anomalies**
+
+            | Rule Type ID | Rule Type Name |
+            | --- | --- |
+            | 3 | Too many requests to get an access token |
+            | 4 | High percentage of API errors |
+            | 5 | Large number of rate limit errors |
+            | 6 | More than one client using an API credential |
+            | 7 | Authentication failures |
+            | 8 | Programmatic creation of more than one API credential |
+
+            **Category: Data Usage**
+
+            | Rule Type ID | Rule Type Name |
+            | --- | --- |
+            | 9 | Data usage approaching limit |
+
+            **Category: Access Rule Changes**
+
+            | Rule Type ID | Rule Type Name |
+            | --- | --- |
+            | 10 | Rule creation, deletion, changing or reordering |
+
+            **Category: Behavior Analytics**
+
+            | Rule Type ID | Rule Type Name |
+            | --- | --- |
+            | 11 | Impossible travel detected |
+            | 12 | Bulk upload operations |
+            | 13 | Bulk download operations |
+            | 14 | Bulk delete operations |
+            | 15 | DLP violation spike |
+            | 16 | Upload from high-risk countries |
+            | 17 | Upload to high-risk countries |
+          example: 1
+          type: integer
+        severity:
+          $ref: "#/components/schemas/severityAlert"
+        conditions:
+          $ref: "#/components/schemas/conditionsAlertRule"
+        notification_info:
+          description: The list of notification details.
+          items:
+            $ref: "#/components/schemas/notificationInfoAlertRule"
+          minItems: 1
+          type: array
+        event_time:
+          description: The date and time (ISO 8601 timestamp) when the system recorded
+            the event.
+          example: 2024-10-22T10:30:00Z
+          format: date-time
+          type: string
+        redirect_link:
+          description: The URL of the alert page in Secure Access.
+          example: https://dashboard.company.com/alerts/42
+          format: uri
+          type: string
+      required:
+      - name
+      - notification_info
+      - severity
+      - type
+      type: object
+    totalCountAlertsResponse:
+      additionalProperties: false
+      description: |-
+        The total number of active alerts.
+        Set `only_active_alerts_count=true` query parameter for the system to return the `total` field only.
+      properties:
+        total:
+          description: The total number of active alerts.
+          example: 100
+          type: integer
+      required:
+      - total
+      type: object
+    severityCounts:
+      additionalProperties:
+        description: The severity and the number of alerts categorized by the severity.
+        type: integer
+      description: The number of alerts categorized by the severity.
+      example:
+        High: 30
+        Medium: 40
+        Low: 20
+        Info: 10
+      type: object
+    ListAlertsResponse:
+      description: The properties of the alerts with the alert metadata.
+      example:
+        total: 100
+        severityCounts:
+          High: 30
+          Warning: 50
+          Low: 20
+        alerts:
+        - alertId: AL-2048-833125-1764567890123-3f9a1c4b2d7e8f01
+          organization_id: 123
+          description: Alert description
+          status: 1
+          rule_id: 1
+          created_at: 2024-01-01T00:00:00Z
+          modified_at: 2024-01-01T00:00:00Z
+          name: Alert Name
+          rule_type_id: 1
+          severity: 1
+          access_rule_context:
+            redirect_entity_url: https://dashboard.sse.cisco.com/org/8327040/secure/policy?ruleId=2313262
+            redirect_entity_url_label: Test Rule
+            change_type: create
+            changes_made: Rule created
+      properties:
+        total:
+          description: The total number of active alerts.
+          example: 100
+          type: integer
+        severityCounts:
+          additionalProperties:
+            description: The severity and the number of alerts categorized by the
+              severity.
+            type: integer
+          description: The number of alerts categorized by the severity.
+          example:
+            High: 30
+            Medium: 40
+            Low: 20
+            Info: 10
+          type: object
+        alerts:
+          description: The list of the details for the alerts.
+          items:
+            $ref: "#/components/schemas/AlertWithAdditionalContext"
+          type: array
+      required:
+      - alerts
+      - severityCounts
+      - total
+      type: object
+    filtersAlertObject:
+      description: The properties of the filters query parameter. Filter for the attributes
+        of the alerts.
+      properties:
+        status:
+          $ref: "#/components/schemas/statusAlert"
+        severity:
+          $ref: "#/components/schemas/severityAlert"
+        created_after:
+          description: |-
+            Filter for the alerts in the collection that the system created after the timestamp.
+            Provide a date and time (ISO 8601) using the YYYY-MM-DD HH:MM:SS format.
+            **Note:** You cannot use the `created_after` query parameter with the `time_range` filter.
+          example: 2024-01-01T00:00:00Z
+          format: date-time
+          type: string
+        modified_at:
+          description: The time and date (ISO 8601 timestamp) when the system last
+            modified the alert.
+          example: 2025-01-01T00:00:00Z
+          format: date-time
+          type: string
+        alert_name:
+          description: The name of the alert.
+          example: Production VPN Tunnel Alert
+          type: string
+        pattern_search:
+          description: "Provide a search pattern to query for by the alert name, alert\
+            \ rule name, or alert rule category name."
+          example: Network Tunnel
+          type: string
+        only_active_alerts_count:
+          default: false
+          description: Specify whether to query for the count of the active alerts
+            only.
+          example: true
+          type: boolean
+        time_range:
+          $ref: "#/components/schemas/time_range"
+        include_context:
+          default: false
+          description: Include the context field in each alert response. The context
+            contains additional metadata about the alert.
+          example: true
+          type: boolean
+      type: object
+    listAlertRules_400_response:
+      example:
+        error: Not found IAM key info for org 12355.
+        status: 400
+      properties:
+        error:
+          description: Bad Request
+          example: Not found IAM key info for org 12355.
+          type: string
+        status:
+          description: The HTTP status code returned in the response.
+          example: 400
+          type: integer
+      type: object
+    listAlertRules_401_response:
+      example:
+        error: Authorization token is invalid.
+        status: 401
+      properties:
+        error:
+          description: Unauthorized
+          example: Authorization token is invalid.
+          type: string
+        status:
+          description: The HTTP status code returned in the response.
+          example: 401
+          type: integer
+      type: object
+    listAlertRules_403_response:
+      example:
+        error: Forbidden
+        status: 403
+      properties:
+        error:
+          description: Error message explaining the reason for failure.
+          example: Forbidden
+          type: string
+        status:
+          description: The HTTP status code returned in the response.
+          example: 403
+          type: integer
+      type: object
+    listAlertRules_404_response:
+      example:
+        error: Not Found
+        status: 404
+      properties:
+        error:
+          description: Error message explaining the reason for failure.
+          example: Not Found
+          type: string
+        status:
+          description: The HTTP status code returned in the response.
+          example: 404
+          type: integer
+      type: object
+    listAlertRules_500_response:
+      example:
+        error: Internal Server Error
+        status: 500
+      properties:
+        error:
+          description: Error message explaining the reason for failure.
+          example: Internal Server Error
+          type: string
+        status:
+          description: The HTTP status code returned in the response.
+          example: 500
+          type: integer
+      type: object
+    createAlertRule_request:
+      description: The properties of the alert rule used by the system to create an
+        alert rule.
+      properties:
+        name:
+          description: The unique name of the alert rule.
+          example: Production VPN Tunnel Alert
+          maxLength: 255
+          type: string
+        description:
+          description: The description of the alert rule.
+          example: Alert when production VPN tunnel disconnects
+          maxLength: 100
+          type: string
+        severity:
+          $ref: "#/components/schemas/severityAlert"
+        status:
+          $ref: "#/components/schemas/statusAlertRule"
+        rule_type_id:
+          description: |-
+            The identifier of the rule type.
+
+            **Category: Connectivity**
+
+            | Rule Type ID | Rule Type Name |
+            | --- | --- |
+            | 1 | Network tunnel group disconnected |
+            | 2 | No traffic through network tunnel group |
+
+            **Category: API Anomalies**
+
+            | Rule Type ID | Rule Type Name |
+            | --- | --- |
+            | 3 | Too many requests to get an access token |
+            | 4 | High percentage of API errors |
+            | 5 | Large number of rate limit errors |
+            | 6 | More than one client using an API credential |
+            | 7 | Authentication failures |
+            | 8 | Programmatic creation of more than one API credential |
+
+            **Category: Data Usage**
+
+            | Rule Type ID | Rule Type Name |
+            | --- | --- |
+            | 9 | Data usage approaching limit |
+
+            **Category: Access Rule Changes**
+
+            | Rule Type ID | Rule Type Name |
+            | --- | --- |
+            | 10 | Rule creation, deletion, changing or reordering |
+
+            **Category: Behavior Analytics**
+
+            | Rule Type ID | Rule Type Name |
+            | --- | --- |
+            | 11 | Impossible travel detected |
+            | 12 | Bulk upload operations |
+            | 13 | Bulk download operations |
+            | 14 | Bulk delete operations |
+            | 15 | DLP violation spike |
+            | 16 | Upload from high-risk countries |
+            | 17 | Upload to high-risk countries |
+          example: 1
+          type: integer
+        notification_info:
+          description: The list of notifications for the alert rule.
+          items:
+            $ref: "#/components/schemas/notificationInfoAlertRule"
+          type: array
+        conditions:
+          $ref: "#/components/schemas/conditionsAlertRule"
+      required:
+      - name
+      - rule_type_id
+      - severity
+      - status
+      type: object
+    createAlertRule_201_response:
+      description: The properties of the created alert rule.
+      example:
+        message: Rule created successfully
+      properties:
+        message:
+          description: The message from the system about the creation of the alert
+            rule.
+          example: Rule created successfully
+          type: string
+      type: object
+    createAlertRule_409_response:
+      example:
+        error: A rule with this name already exists for this organization
+        status: 409
+      properties:
+        error:
+          description: Error message explaining the reason for failure.
+          example: A rule with this name already exists for this organization
+          type: string
+        status:
+          description: The HTTP status code returned in the response.
+          example: 409
+          type: integer
+      type: object
+    createAlertRule_422_response:
+      example:
+        error: "Bad Request, Maximum 50 email recipients allowed per rule, found 100"
+        status: 422
+      properties:
+        error:
+          example: "Bad Request, Maximum 50 email recipients allowed per rule, found\
+            \ 100"
+          type: string
+        status:
+          description: The HTTP status code returned in the response.
+          example: 422
+          type: integer
+      type: object
+    createAlertRule_429_response:
+      example:
+        error: Rate limit exceeded
+        status: 404
+      properties:
+        error:
+          description: Error message explaining the reason for failure.
+          example: Rate limit exceeded
+          type: string
+        status:
+          description: The HTTP status code returned in the response.
+          example: 404
+          type: integer
+      type: object
+    deleteAlertRules_request:
+      description: The properties of the alert rules used by the system to delete
+        the alert rules.
+      example:
+        ruleIds:
+        - 48
+        - 49
+        - 50
+      properties:
+        ruleIds:
+          description: The list of rule IDs used by the system to delete the alert
+            rules.
+          example:
+          - 48
+          - 49
+          - 50
+          items:
+            description: The numeric identifier used by the system to delete the alert
+              rule.
+            type: integer
+          maxItems: 100
+          type: array
+      required:
+      - ruleIds
+      type: object
+    deleteAlertRules_200_response:
+      description: The properties of the deleted alert rules.
+      example:
+        success: true
+        errorIds:
+        - 100
+        successfulIds:
+        - 1
+        - 2
+        - 3
+        - 4
+      properties:
+        success:
+          description: |-
+            Specifies whether the system completed all operations successfully.
+            If any ID is invalid, the system is unable to complete the operation.
+          example: true
+          type: boolean
+        successfulIds:
+          description: The list of IDs for the alert rules that the system deleted.
+          example:
+          - 1
+          - 2
+          - 3
+          - 4
+          items:
+            description: The ID of the alert rule that the system deleted.
+            type: integer
+          type: array
+        errorIds:
+          description: The list of unique identifiers that either do no exist or the
+            system failed to delete or update.
+          example:
+          - 100
+          items:
+            description: The unique identifier of the alert rule that does not exist
+              or the system failed to delete or update.
+            example: 100
+            type: integer
+          type: array
+      type: object
+    updateAlertRule_request:
+      description: The properties of the alert rule used by the system to update an
+        alert rule.
+      properties:
+        name:
+          description: The unique name of the alert rule.
+          example: Production VPN Tunnel Alert
+          maxLength: 255
+          type: string
+        description:
+          description: The description of the alert rule.
+          example: Alert when production VPN tunnel disconnects
+          maxLength: 100
+          type: string
+        severity:
+          $ref: "#/components/schemas/severityAlert"
+        status:
+          $ref: "#/components/schemas/statusAlertRule"
+        rule_type_id:
+          description: |-
+            The identifier of the rule type.
+
+            **Category: Connectivity**
+
+            | Rule Type ID | Rule Type Name |
+            | --- | --- |
+            | 1 | Network tunnel group disconnected |
+            | 2 | No traffic through network tunnel group |
+
+            **Category: API Anomalies**
+
+            | Rule Type ID | Rule Type Name |
+            | --- | --- |
+            | 3 | Too many requests to get an access token |
+            | 4 | High percentage of API errors |
+            | 5 | Large number of rate limit errors |
+            | 6 | More than one client using an API credential |
+            | 7 | Authentication failures |
+            | 8 | Programmatic creation of more than one API credential |
+
+            **Category: Data Usage**
+
+            | Rule Type ID | Rule Type Name |
+            | --- | --- |
+            | 9 | Data usage approaching limit |
+
+            **Category: Access Rule Changes**
+
+            | Rule Type ID | Rule Type Name |
+            | --- | --- |
+            | 10 | Rule creation, deletion, changing or reordering |
+
+            **Category: Behavior Analytics**
+
+            | Rule Type ID | Rule Type Name |
+            | --- | --- |
+            | 11 | Impossible travel detected |
+            | 12 | Bulk upload operations |
+            | 13 | Bulk download operations |
+            | 14 | Bulk delete operations |
+            | 15 | DLP violation spike |
+            | 16 | Upload from high-risk countries |
+            | 17 | Upload to high-risk countries |
+          example: 1
+          type: integer
+        notification_info:
+          description: The list of notifications for the alert rule.
+          items:
+            $ref: "#/components/schemas/notificationInfoAlertRule"
+          type: array
+        conditions:
+          $ref: "#/components/schemas/conditionsAlertRule"
+      type: object
+    updateAlertRule_200_response:
+      description: The properties of the updated alert rule.
+      example:
+        message: Rule updated successfully
+      properties:
+        message:
+          description: The message from the system about the update of the alert rule.
+          example: Rule updated successfully
+          type: string
+      type: object
+    updateAlertRulesStatus_request:
+      description: The properties of the alert rules used by the system to update
+        the alert rules.
+      properties:
+        status:
+          description: |-
+            The numeric identifier of the status for the alert rule.
+            Use `1` to enable the alert rule or `2` to disable the alert rule.
+          enum:
+          - 1
+          - 2
+          example: 1
+          type: integer
+        entity_ids:
+          description: The list of identifiers used by the system to update the alert
+            rules.
+          example:
+          - 1
+          - 2
+          items:
+            description: The identifier of the alert rule. The system uses this identifier
+              to update the alert rule.
+            example: 1
+            type: integer
+          maxItems: 100
+          minItems: 1
+          type: array
+      required:
+      - entity_ids
+      - status
+      type: object
+    updateAlertRulesStatus_200_response:
+      description: The properties of the updated status of the alert rules.
+      example:
+        success: true
+        errorIds:
+        - 100
+        successfulIds:
+        - 1234
+      properties:
+        success:
+          description: |-
+            Specifies whether the operation succeeded.
+            Returns false if any ID is invalid.
+          example: true
+          type: boolean
+        successfulIds:
+          description: The list of IDs for the alert rules that the system updated.
+          example:
+          - 1234
+          items:
+            description: The ID of the alert rule that the system updated.
+            example: 1234
+            type: integer
+          type: array
+        errorIds:
+          description: The list of unique identifiers that either do no exist or the
+            system failed to delete or update.
+          example:
+          - 100
+          items:
+            description: The unique identifier of the alert rule that does not exist
+              or the system failed to delete or update.
+            example: 100
+            type: integer
+          type: array
+      type: object
+    listAlerts_200_response:
+      oneOf:
+      - $ref: "#/components/schemas/ListAlertsResponse"
+      - $ref: "#/components/schemas/totalCountAlertsResponse"
+    updateAlertsStatus_request:
+      description: The properties of the alerts used by the system to update the alerts.
+      properties:
+        status:
+          description: |-
+            The numeric identifier of the alert status.
+            Use `1` to enable the alert or `2` to disable the alert.
+          enum:
+          - 1
+          - 2
+          example: 1
+          type: integer
+        entity_ids:
+          description: The list of identifiers used by the system to update the alerts.
+          example:
+          - 1adf
+          - 2eed
+          items:
+            description: The identifier of the alert. The system uses this identifier
+              to update the alert.
+            example: 1abc
+            type: string
+          maxItems: 100
+          minItems: 1
+          type: array
+      required:
+      - entity_ids
+      - status
+      type: object
+    updateAlertsStatus_200_response:
+      description: The properties of the updated alert statuses.
+      example:
+        success: true
+        errorIds:
+        - 100a
+        successfulIds:
+        - AL-2048-833125-1764567890123-3f9a1c4b2d7e8f01
+      properties:
+        success:
+          description: |-
+            If all operations succeeded, the system returns `true`.
+            If any ID is invalid, the system returns `false`.
+          example: true
+          type: boolean
+        successfulIds:
+          description: The list of IDs for the alert rules that the system updated.
+          example:
+          - AL-2048-833125-1764567890123-3f9a1c4b2d7e8f01
+          items:
+            description: The ID of the alert rule that the system updated.
+            example: AL-2048-833125-1764567890123-3f9a1c4b2d7e8f01
+            type: string
+          type: array
+        errorIds:
+          description: The list of unique identifiers that either do no exist or the
+            system failed to delete or update.
+          example:
+          - 100a
+          items:
+            description: The unique identifier of the alert rule that does not exist
+              or the system failed to delete or update.
+            example: 100a
+            type: string
+          type: array
+      type: object
+    conditionsAlertRule_rows_inner:
+      description: The conditions that define the alert rule.
+      example:
+        field: field
+        value: value
+      properties:
+        field:
+          description: The name of the condition.
+          type: string
+        value:
+          description: The canonical name of the geographical region for the data
+            center where the notification occurs.
+          type: string
+      required:
+      - field
+      - value
+      type: object
+    TestEmailNotificationResponse_results_inner:
+      description: The properties of the test email notification sent by the system.
+      example:
+        recipients_count: 2
+        success: true
+        type: email
+        error: Error in sending the test notification.
+      properties:
+        type:
+          $ref: "#/components/schemas/notificationTypeEmail"
+        success:
+          description: Specifies whether the notification was sent by the system successfully.
+          example: true
+          type: boolean
+        error:
+          description: "When the system fails to send the test message, the system\
+            \ reports an error message."
+          example: Error in sending the test notification.
+          type: string
+        recipients_count:
+          description: The number of recipients of the test email notification.
+          example: 2
+          type: integer
+      type: object
+  securitySchemes:
+    oauthFlow:
+      description: The client credential flow.
+      flows:
+        clientCredentials:
+          scopes:
+            admin.alertrules:read: Read Alert Rules
+            admin.alertrules:write: Write Alert Rules
+            admin.alerts:read: Read Alerts
+            admin.alerts:write: Write Alerts
+          tokenUrl: https://api.sse.cisco.com/auth/v2/token
+      type: oauth2

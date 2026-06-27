@@ -11,8 +11,10 @@ import (
 	"net/http"
 	"sync"
 
+	"github.com/CiscoDevNet/go-ciscosecureaccess/alerting"
 	"github.com/CiscoDevNet/go-ciscosecureaccess/contentcategories"
 	"github.com/CiscoDevNet/go-ciscosecureaccess/destinationlists"
+	"github.com/CiscoDevNet/go-ciscosecureaccess/ztnaconfig"
 	"github.com/CiscoDevNet/go-ciscosecureaccess/identities"
 	"github.com/CiscoDevNet/go-ciscosecureaccess/internaldomains"
 	"github.com/CiscoDevNet/go-ciscosecureaccess/internalnetworks"
@@ -210,4 +212,17 @@ func (c *SSEClientFactory) GetIdentitiesClient(ctx context.Context) *identities.
 	configuration.HTTPClient = c.GetHttpClient(ctx)
 	configuration.Servers[0].URL = c.GetURLString("{basePath}")
 	return identities.NewAPIClient(configuration)
+}
+
+func (c *SSEClientFactory) GetZTNAConfigClient(ctx context.Context) *ztnaconfig.APIClient {
+	configuration := ztnaconfig.NewConfiguration()
+	configuration.HTTPClient = c.GetHttpClient(ctx)
+	return ztnaconfig.NewAPIClient(configuration)
+}
+
+func (c *SSEClientFactory) GetAlertingClient(ctx context.Context) *alerting.APIClient {
+	configuration := alerting.NewConfiguration()
+	configuration.HTTPClient = c.GetHttpClient(ctx)
+	configuration.Servers[0].URL = c.GetURLString("{basePath}")
+	return alerting.NewAPIClient(configuration)
 }

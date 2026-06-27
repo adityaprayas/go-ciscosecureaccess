@@ -48,6 +48,9 @@ generate-virtualappliances:
 generate-identities:
 	make generate PACKAGE=identities SPEC=./specs/cisco_secure_access_identities_registration_api_1_0_0.yaml
 
+generate-alerting:
+	make generate PACKAGE=alerting SPEC=./specs/cisco_secure_access_alerting_api_1_0_0.yaml CLI_EXTRA="--additional-properties=enumClassPrefix=true"
+
 generate-all:
 	for spec in contentcategories destinationlists internaldomains internalnetworks networks ntg privateapps reports resconn roaming rules swg virtualappliances identities; do \
 	make generate-$${spec} ;\
